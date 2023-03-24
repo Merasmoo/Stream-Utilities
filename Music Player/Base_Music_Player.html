@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OBS Youtube Player</title>
+<style>
+#card {
+	height: 100px;
+	width: 400px;
+	background-color: black;
+	border: solid gray 10px;
+	border-radius: 10px;
+	position: relative;
+}
+#cardtext {
+	width: 380px;
+	align: center;
+	color: white;
+	text-align: center;
+	position: absolute;
+	margin: 0;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+</style>
+</head>
+<body>
+<div id="card"><p id="cardtext"></div>
+</br>
+<div id="player"></div>
+<script>
+var tag = document.createElement('script');
+
+var shuffled = false;
+
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var player;
+function onYouTubeIframeAPIReady() {
+	player = new YT.Player('player', {
+		height: '390',
+		width: '640',
+		events: {
+		'onReady': onPlayerReady,
+		'onStateChange': onPlayed
+		}
+	});
+}
+
+function onPlayerReady(event) {
+	player.loadPlaylist({'listType': 'playlist', 'list': 'PLflPNfAvwobJGIfXPt25DvtZFvpP8TCDr','index': '0','startSeconds': '0','suggestedQuality': 'hd720'});
+	event.target.mute();
+    setTimeout(setShuffleFunction, 1000);
+}
+
+function setShuffleFunction(){
+    player.setShuffle(true);
+	player.playVideoAt(0);
+	player.unMute()
+	shuffled = true;
+}
+
+function onPlayed(event) {
+	if (player.getPlayerState() == 1 && shuffled) {
+		document.getElementById("cardtext").innerHTML = player.getVideoData().title;
+	}
+}
+</script>
+</body>
+</html>
